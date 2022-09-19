@@ -4,7 +4,7 @@
 // App: ModalRoute
 // -------------------------------------------------------------
 import { ActionArgs, json, LoaderArgs, redirect } from '@remix-run/node';
-import { useCatch, useLoaderData, useNavigate, useParams } from '@remix-run/react';
+import { useCatch, useLoaderData, useNavigate, useOutletContext, useParams } from '@remix-run/react';
 import invariant from 'tiny-invariant';
 //
 import { useMatchesData } from '~/hooks/useMatchesData';
@@ -145,13 +145,15 @@ export default function WidgetFormRoute() {
   const widgetId = +(params.widgetId || 0);
   const widget: Widget = widgetList.find?.((r: Widget) => r.widgetId === widgetId) || getNewWidget();
   //
+  const { showModal } = useOutletContext<{ showModal: boolean }>();
   let [isOpen, setIsOpen] = useState(true);
+
   const navigate = useNavigate();
   const handleClose = () => {
     setIsOpen(false);
     navigate(-1);
   };
-  return (
+  return showModal ? (
     <Dialog open={isOpen} onClose={handleClose} className="relative z-50">
       <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
       <div className="fixed inset-0  flex items-center justify-center p-4">
@@ -166,6 +168,11 @@ export default function WidgetFormRoute() {
         </Dialog.Panel>
       </div>
     </Dialog>
+  ) : (
+    <div className="m-4 flex flex-col  rounded-md border p-4">
+      <div className="text-large font-semibold">{widget.widgetName}</div>
+      <div>{widget.widgetNumber}</div>
+    </div>
   );
 }
 
