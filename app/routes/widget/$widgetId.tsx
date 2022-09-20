@@ -140,6 +140,8 @@ export async function action({ request, params }: ActionArgs) {
 export default function WidgetFormRoute() {
   //const {widget} = useLoaderData<typeof loader>();
   // OR
+  // as we are fetching all data in list loader, we can get data directly from parent route
+  // if you are just loading few key items for list then use `useLoaderData` to load complete data
   const { widgetList } = useMatchesData('routes/widget') as { widgetList: Widget[] };
   const params = useParams();
   const widgetId = +(params.widgetId || 0);
